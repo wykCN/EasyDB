@@ -1,4 +1,4 @@
-package com.wyk.EasyDB;
+package com.wyk.esaydb;
 
 /**
  * Hello world!

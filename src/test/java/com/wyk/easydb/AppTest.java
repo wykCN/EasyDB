@@ -1,4 +1,4 @@
-package com.wyk.EasyDB;
+package com.wyk.easydb;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
