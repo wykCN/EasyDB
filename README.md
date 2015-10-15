@@ -1,4 +1,4 @@
-# EasyDB
+# easydb
 简介 
 - 一个工具，执行DAO查询操作的工具
 
