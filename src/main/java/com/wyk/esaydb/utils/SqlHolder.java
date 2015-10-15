@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2015年10月14日
  * @version 1.0
  */
-public class SQLHolder {
+public class SqlHolder {
 	private String sql ;
 	private List<Object> params  = new ArrayList<Object>();
 	
