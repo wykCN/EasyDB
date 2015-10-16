@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @date 2015年10月15日
  * @version 1.0
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
 	String name() default "";
