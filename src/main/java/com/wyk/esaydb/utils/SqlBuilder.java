@@ -3,7 +3,11 @@ package com.wyk.esaydb.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -55,7 +59,111 @@ public class SqlBuilder {
 		return holder;
 		
 	}
+	/**
+	 * 单表更新
+	 * @param entity
+	 * @param conditions
+	 * @return
+	 */
+	public SqlHolder buildUpdate(IEntity entity,Map<String,Object> conditions){
+		//parse element
+		SqlHolder holder = new SqlHolder();
+		Field[] declaredFields = entity.getClass().getDeclaredFields();
 
+		StringBuilder columns = new StringBuilder();
+		for (Field field : declaredFields) {
+			if(isTransient(field)){
+				continue;
+			}
+			holder.addParam(convert(getValue(entity,field)));
+			columns.append(getColumnName(field)).append("=?,");
+		}
+		deleteLastComma(columns);
+		//build sql
+		StringBuilder sql = new StringBuilder();
+		sql.append("UPDATE ").append(getTableName(entity.getClass())).append("SET ");
+		sql.append(columns.toString());
+		
+		return _buildWhereSqlHolder(holder, conditions);
+	}
+	
+	/**
+	 * 条件删除
+	 * @param entity
+	 * @param conditions
+	 * @return
+	 */
+	public SqlHolder buildDelete(IEntity entity,Map<String,Object> conditions) {
+		SqlHolder holder = new SqlHolder();
+		StringBuilder sql = new StringBuilder();
+		sql.append("DELETE FROM ").append(getTableName(entity.getClass()));
+		
+		holder.setSql(sql.toString());
+		
+		return _buildWhereSqlHolder(holder,conditions);
+	}
+	/**
+	 * 条件查询
+	 * @param entity
+	 * @param conditions
+	 * @return
+	 */
+	public SqlHolder buildFind(IEntity entity,Map<String,Object> conditions){
+		SqlHolder holder = new SqlHolder();
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT * FROM ").append(getTableName(entity.getClass()));
+		
+		holder.setSql(sql.toString());
+		
+		return _buildWhereSqlHolder(holder,conditions);
+	}
+	
+	/**
+	 * 模糊条件查询
+	 * @param entity
+	 * @param conditions
+	 * @return
+	 */
+	public SqlHolder buildLikeFind(IEntity entity,Map<String,Object> conditions){
+		SqlHolder holder = new SqlHolder();
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT * FROM ").append(getTableName(entity.getClass()));
+		
+		holder.setSql(sql.toString());
+		
+		return _buildWhereLikeSqlHolder(holder,conditions);
+	}
+	
+	
+	private SqlHolder _buildWhereSqlHolder(SqlHolder holder,
+			Map<String, Object> conditions) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(holder.getSql());
+		sql.append(" WHERE ");
+		for(String column : conditions.keySet()){
+			Object obj = conditions.get(column);
+			sql.append(column+" = ? and ");
+			holder.addParam(obj);
+		}
+		deleteLastAND(sql);
+		holder.setSql(sql.toString());
+		return holder;
+	}
+	
+	private SqlHolder _buildWhereLikeSqlHolder(SqlHolder holder,
+			Map<String, Object> conditions) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(holder.getSql());
+		sql.append(" WHERE ");
+		for(String column : conditions.keySet()){
+			Object obj = conditions.get(column);
+			sql.append(column+" LIKE ? and ");
+			holder.addParam(obj);
+		}
+		deleteLastAND(sql);
+		holder.setSql(sql.toString());
+		return holder;
+	}
 	/**
 	 * 过滤字段
 	 * 
@@ -150,5 +258,19 @@ public class SqlBuilder {
             sb.deleteCharAt(sb.length() - 1);
         }
     }
+    /**
+     * 删除最后 “and”
+     * @param sql
+     * @return
+     */
+    private static StringBuilder deleteLastAND(StringBuilder sql) {
+		int index = sql.lastIndexOf("and");
+		System.out.println(sql.lastIndexOf("and"));
+		System.out.println(sql.length());
+		if(sql.lastIndexOf("and") == sql.length() - 4){
+			sql.delete(sql.lastIndexOf("and")-1, sql.length());
+		}
+		return sql;
+	}
 
 }
