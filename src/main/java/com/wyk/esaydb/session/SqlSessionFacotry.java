@@ -16,6 +16,11 @@ public class SqlSessionFacotry {
 	public static SqlSession openSession(){
 		return null;
 	}
+	/**
+	 * 是否打开事务
+	 * @param openTransiaction
+	 * @return
+	 */
 	public static SqlSession openSession(boolean openTransiaction){
 		return null;
 	}
