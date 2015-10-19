@@ -22,10 +22,9 @@ public class ListResultSetHandler<T> extends AbstractListHandler<T> {
 
 	private Class<T> clazz;
 	@SuppressWarnings("unchecked")
-	public ListResultSetHandler() {
+	public ListResultSetHandler(Class<T> type) {
 		super();
-		this.clazz = (Class<T>)((ParameterizedType)getClass()   
-                .getGenericSuperclass()).getActualTypeArguments()[0];
+		this.clazz = type;
 	}
 
 	@Override

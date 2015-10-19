@@ -3,10 +3,7 @@ package com.wyk.esaydb.utils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +28,7 @@ public class SqlBuilder {
 	 * @param entity
 	 * @return
 	 */
-	public SqlHolder buildInsert(IEntity entity) {
+	public static SqlHolder buildInsert(IEntity entity) {
 		//parse element
 		SqlHolder holder = new SqlHolder();
 		Field[] fields = entity.getClass().getDeclaredFields();
@@ -65,7 +62,7 @@ public class SqlBuilder {
 	 * @param conditions
 	 * @return
 	 */
-	public SqlHolder buildUpdate(IEntity entity,Map<String,Object> conditions){
+	public static SqlHolder buildUpdate(IEntity entity,Map<String,Object> conditions){
 		//parse element
 		SqlHolder holder = new SqlHolder();
 		Field[] declaredFields = entity.getClass().getDeclaredFields();
@@ -93,7 +90,7 @@ public class SqlBuilder {
 	 * @param conditions
 	 * @return
 	 */
-	public SqlHolder buildDelete(IEntity entity,Map<String,Object> conditions) {
+	public static SqlHolder buildDelete(IEntity entity,Map<String,Object> conditions) {
 		SqlHolder holder = new SqlHolder();
 		StringBuilder sql = new StringBuilder();
 		sql.append("DELETE FROM ").append(getTableName(entity.getClass()));
@@ -108,7 +105,7 @@ public class SqlBuilder {
 	 * @param conditions
 	 * @return
 	 */
-	public SqlHolder buildFind(IEntity entity,Map<String,Object> conditions){
+	public static SqlHolder buildFind(IEntity entity,Map<String,Object> conditions){
 		SqlHolder holder = new SqlHolder();
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT * FROM ").append(getTableName(entity.getClass()));
@@ -124,7 +121,7 @@ public class SqlBuilder {
 	 * @param conditions
 	 * @return
 	 */
-	public SqlHolder buildLikeFind(IEntity entity,Map<String,Object> conditions){
+	public static SqlHolder buildLikeFind(IEntity entity,Map<String,Object> conditions){
 		SqlHolder holder = new SqlHolder();
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT * FROM ").append(getTableName(entity.getClass()));
@@ -135,7 +132,7 @@ public class SqlBuilder {
 	}
 	
 	
-	private SqlHolder _buildWhereSqlHolder(SqlHolder holder,
+	private static SqlHolder _buildWhereSqlHolder(SqlHolder holder,
 			Map<String, Object> conditions) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(holder.getSql());
@@ -150,7 +147,7 @@ public class SqlBuilder {
 		return holder;
 	}
 	
-	private SqlHolder _buildWhereLikeSqlHolder(SqlHolder holder,
+	private static SqlHolder _buildWhereLikeSqlHolder(SqlHolder holder,
 			Map<String, Object> conditions) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(holder.getSql());

@@ -1,5 +1,7 @@
 package com.wyk.esaydb.session;
 
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 /**
@@ -12,4 +14,16 @@ import javax.sql.DataSource;
  */
 public class SqlSession {
 	private DataSource dataSource;
+	
+	public void beginTransaction(){
+		
+	}
+	
+	
+	public void commitTransaction(){
+		
+	}
+	public void closeResource(){
+		//close connectionn
+	}
 }
