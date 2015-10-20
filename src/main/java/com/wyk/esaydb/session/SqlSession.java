@@ -1,6 +1,7 @@
 package com.wyk.esaydb.session;
 
-import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * 
@@ -11,17 +12,27 @@ import javax.sql.DataSource;
  * @version 1.0
  */
 public class SqlSession {
-	private DataSource dataSource;
+	private Connection connection;
 	
-	public void beginTransaction(){
-		
+	public SqlSession(Connection connection) {
+		this.connection = connection;
 	}
-	
-	
-	public void commitTransaction(){
-		
+
+
+	public void beginTransaction() throws SQLException{
+		connection.setAutoCommit(false);
 	}
-	public void closeResource(){
+	public void commitTransaction() throws SQLException{
+		connection.commit();
+	}
+	public void rollback() throws SQLException{
+		connection.rollback();
+	}
+	public void closeResource() throws SQLException{
 		//close connectionn
+		if(connection != null){
+			if(!connection.isClosed())
+				connection.close();
+		}
 	}
 }

@@ -1,4 +1,10 @@
 package com.wyk.esaydb.session;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
 /**
  * 
  * 工场模式创建SqlSession对象
@@ -9,22 +15,23 @@ package com.wyk.esaydb.session;
  */
 public class SqlSessionFacotry {
 
+	private ComboPooledDataSource dataSourcePool;
+	
+	protected SqlSessionFacotry(ComboPooledDataSource dataSourcePool){
+		this.dataSourcePool = dataSourcePool;
+	}
 	/**
 	 * 默认(自动)事务提交方式获取sqlsession
 	 * @return
 	 */
-	public static SqlSession openSession(){
-		return null;
-	}
-	/**
-	 * 是否打开事务
-	 * @param openTransiaction
-	 * @return
-	 */
-	public static SqlSession openSession(boolean openTransiaction){
-		//get connnection
-		//config setSqlRunner to session
-		//return sql runner
-		return null;
+	public SqlSession openSession(){
+		SqlSession sqlSession = null;
+		try {
+			Connection connection = dataSourcePool.getConnection();
+			sqlSession = new SqlSession(connection);
+		} catch (SQLException e) {
+			throw new RuntimeException("连接获取失败",e);
+		}
+		return sqlSession;
 	}
 }
