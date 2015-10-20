@@ -1,7 +1,5 @@
 package com.wyk.esaydb.session;
 
-import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
 /**

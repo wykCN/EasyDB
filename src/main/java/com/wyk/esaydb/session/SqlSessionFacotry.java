@@ -22,6 +22,9 @@ public class SqlSessionFacotry {
 	 * @return
 	 */
 	public static SqlSession openSession(boolean openTransiaction){
+		//get connnection
+		//config setSqlRunner to session
+		//return sql runner
 		return null;
 	}
 }
