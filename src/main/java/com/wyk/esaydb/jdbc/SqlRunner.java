@@ -29,6 +29,7 @@ public class SqlRunner<T extends IEntity> {
 		super();
 		this.setClazz(type);
 		this.handler = new ListResultSetHandler<T>(type);
+		runner = new QueryRunner();
 	}
 
 	public boolean executeInsert(Connection conn,T obj) throws SQLException{
@@ -46,10 +47,23 @@ public class SqlRunner<T extends IEntity> {
 		int rows = runner.update(conn, sqlHolder.getSql(), sqlHolder.getParams());
 		return rows > 0;
 	}
-	
-	public List<T> executeQuery(Connection conn,T obj,Map<String,Object> conditions) throws SQLException {
-		SqlHolder sqlHolder = SqlBuilder.buildFind(obj, conditions);
+	public List<T> executeQuery(Connection conn,Class<T> clazz,Map<String,Object> conditions) throws SQLException {
+		SqlHolder sqlHolder = SqlBuilder.buildFind(clazz, conditions);
 		List<T> list = runner.query(conn, sqlHolder.getSql(), handler,sqlHolder.getParams());
+		return list;
+	}
+	/**
+	 * costomer Sql
+	 * @param conn
+	 * @param clazz
+	 * @param sql
+	 * @param params
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<T> executeCostomQuery(Connection conn,Class<T> clazz,String sql,Object[] params) throws SQLException{
+		ListResultSetHandler<T> customHandler = new ListResultSetHandler<T>(clazz) ;
+		List<T> list = runner.query(conn, sql,customHandler,params);
 		return list;
 	}
 	public Class<T> getClazz() {

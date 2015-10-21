@@ -8,6 +8,6 @@ package com.wyk.esaydb.interfaces;
  * @date 2015年10月16日
  * @version 1.0
  */
-public class IEntity {
+public interface IEntity {
 
 }

@@ -105,10 +105,10 @@ public class SqlBuilder {
 	 * @param conditions
 	 * @return
 	 */
-	public static SqlHolder buildFind(IEntity entity,Map<String,Object> conditions){
+	public static SqlHolder buildFind(Class<? extends IEntity> clazz,Map<String,Object> conditions){
 		SqlHolder holder = new SqlHolder();
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM ").append(getTableName(entity.getClass()));
+		sql.append("SELECT * FROM ").append(getTableName(clazz));
 		
 		holder.setSql(sql.toString());
 		
@@ -261,9 +261,6 @@ public class SqlBuilder {
      * @return
      */
     private static StringBuilder deleteLastAND(StringBuilder sql) {
-		int index = sql.lastIndexOf("and");
-		System.out.println(sql.lastIndexOf("and"));
-		System.out.println(sql.length());
 		if(sql.lastIndexOf("and") == sql.length() - 4){
 			sql.delete(sql.lastIndexOf("and")-1, sql.length());
 		}

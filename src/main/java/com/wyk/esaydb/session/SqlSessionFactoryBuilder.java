@@ -16,7 +16,7 @@ public class SqlSessionFactoryBuilder {
 
 	private static SqlSessionFacotry sqlSessionFactory = null;
 	
-	public synchronized SqlSessionFacotry builder(Properties p){
+	public synchronized static SqlSessionFacotry builder(Properties p)throws Exception{
 		if(sqlSessionFactory == null){
 			ComboPooledDataSource pool = DataSourceFactory.createDataSource(p);
 			sqlSessionFactory = new SqlSessionFacotry(pool);

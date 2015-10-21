@@ -2,6 +2,12 @@ package com.wyk.esaydb.session;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.wyk.esaydb.interfaces.IEntity;
+import com.wyk.esaydb.jdbc.SqlRunner;
 
 /**
  * 
@@ -11,14 +17,69 @@ import java.sql.SQLException;
  * @date 2015年10月15日
  * @version 1.0
  */
-public class SqlSession {
+public class SqlSession<T extends IEntity> {
 	private Connection connection;
-	
-	public SqlSession(Connection connection) {
+	private Class<T> clazz ;
+	private SqlRunner<T> sqlRunner;
+	/**
+	 * constructor
+	 * @param connection
+	 * @param clazz
+	 */
+	public SqlSession(Connection connection,Class<T> clazz) {
 		this.connection = connection;
+		this.clazz = clazz;
+		sqlRunner = new SqlRunner<T>(clazz);
 	}
-
-
+	
+	public boolean save(T obj){
+		boolean flag = false;
+		try {
+			flag = sqlRunner.executeInsert(connection, obj);
+		} catch (SQLException e) {
+			throw new RuntimeException("插入实体失败",e);
+		}
+		return flag;
+	}
+	public boolean delete(T obj,Map<String,Object> conditions){
+		boolean flag = false;
+		try {
+			flag = sqlRunner.executeDelete(connection, obj, conditions);
+		} catch (SQLException e) {
+			throw new RuntimeException("删除实体失败",e);
+		}
+		return flag;
+	}
+	public boolean update(T obj,Map<String,Object> conditions){
+		boolean flag = false;
+		try {
+			flag = sqlRunner.executeUpdate(connection, obj, conditions);
+		} catch (SQLException e) {
+			throw new RuntimeException("更新实体失败",e);
+		}
+		return flag;
+	}
+	public List<T> find(Map<String,Object> conditions){
+		List<T> list = new ArrayList<T>();
+		try {
+			list = sqlRunner.executeQuery(connection, clazz, conditions);
+		} catch (SQLException e) {
+			throw new RuntimeException("更新实体失败",e);
+		}
+		return list;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List findByCustomSql(Class customType,String sql,Object[] params){
+		List list = new ArrayList();
+		try {
+			list = sqlRunner.executeCostomQuery(connection, customType, sql, params);
+		} catch (SQLException e) {
+			throw new RuntimeException("更新实体失败",e);
+		}
+		return list;
+	}
+	
 	public void beginTransaction() throws SQLException{
 		connection.setAutoCommit(false);
 	}

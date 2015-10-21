@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.wyk.esaydb.interfaces.IEntity;
 
 /**
  * 
@@ -24,11 +25,11 @@ public class SqlSessionFacotry {
 	 * 默认(自动)事务提交方式获取sqlsession
 	 * @return
 	 */
-	public SqlSession openSession(){
+	public SqlSession openSession(Class<? extends IEntity> clazz){
 		SqlSession sqlSession = null;
 		try {
 			Connection connection = dataSourcePool.getConnection();
-			sqlSession = new SqlSession(connection);
+			sqlSession = new SqlSession(connection,clazz);
 		} catch (SQLException e) {
 			throw new RuntimeException("连接获取失败",e);
 		}

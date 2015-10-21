@@ -20,6 +20,10 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
  * @version 1.0
  */
 public class DataSourceFactory implements ObjectFactory {
+	private final static String PROP_DRIVERCLASS = "driverClass";
+	private final static String PROP_JDBCURL = "jdbcUrl";
+	private final static String PROP_USER = "user";
+	private final static String PROP_PASSWORD = "password";
 	// 当连接池中的连接用完时，C3P0一次性创建新连接的数目；
 	public final static String PROP_ACQUIREINCREMENT = "acquireIncrement";
 	// 定义在从数据库获取新连接失败后重复尝试获取的次数，默认为
@@ -43,12 +47,13 @@ public class DataSourceFactory implements ObjectFactory {
 	// 连接池中保留的最大连接数。默认为15
 	public final static String PROP_MAXPOOLSIZE = "maxPoolSize";
 
-	private static final String[] ALL_PROPERTIES = { PROP_ACQUIREINCREMENT,
+	private static final String[] ALL_PROPERTIES = { PROP_DRIVERCLASS,
+			PROP_JDBCURL, PROP_USER, PROP_PASSWORD, PROP_ACQUIREINCREMENT,
 			PROP_ACQUIRERETRYATTEMPTS, PROP_ACQUIRERETRYDELAY,
 			PROP_AUTOCOMMITONCLOSE, PROP_BREAKAFTERACQUIREFAILURE,
 			PROP_CHECKOUTTIMEOUT, PROP_CHECKOUTTIMEOUT,
-			PROP_IDLECONNECTIONTESTPERIOD,
-			PROP_INITIALPOOLSIZE, PROP_MAXIDLETIME, PROP_MAXPOOLSIZE };
+			PROP_IDLECONNECTIONTESTPERIOD, PROP_INITIALPOOLSIZE,
+			PROP_MAXIDLETIME, PROP_MAXPOOLSIZE };
 
 	public Object getObjectInstance(Object obj, Name name, Context nameCtx,
 			Hashtable<?, ?> environment) throws Exception {
@@ -86,21 +91,38 @@ public class DataSourceFactory implements ObjectFactory {
 		config(dataSource, properties);
 		return dataSource;
 	}
+
 	@SuppressWarnings("rawtypes")
-	public static ComboPooledDataSource createDataSource(Properties protperties){
+	public static ComboPooledDataSource createDataSource(Properties protperties) throws Exception {
 		return createDataSource((Map) protperties);
 	}
+
 	@SuppressWarnings("rawtypes")
-	public static ComboPooledDataSource createDataSource(Map map){
+	public static ComboPooledDataSource createDataSource(Map map) throws Exception{
 		ComboPooledDataSource dataSource = new ComboPooledDataSource();
 		config(dataSource, map);
 		return dataSource;
 	}
-	
-	@SuppressWarnings("rawtypes" )
-	public static void config(ComboPooledDataSource dataSource, Map properties) {
-		String value = null;
 
+	@SuppressWarnings("rawtypes")
+	public static void config(ComboPooledDataSource dataSource, Map properties) throws Exception {
+		String value = null;
+		value = (String) properties.get(PROP_DRIVERCLASS);
+		if (value != null) {
+			dataSource.setDriverClass(value);
+		}
+		value = (String) properties.get(PROP_JDBCURL);
+		if (value != null) {
+			dataSource.setJdbcUrl(value);
+		}
+		value = (String) properties.get(PROP_USER);
+		if (value != null) {
+			dataSource.setUser(value);
+		}
+		value = (String) properties.get(PROP_PASSWORD);
+		if (value != null) {
+			dataSource.setPassword(value);
+		}
 		value = (String) properties.get(PROP_ACQUIREINCREMENT);
 		if (value != null) {
 			dataSource.setAcquireIncrement(Integer.parseInt(value));
