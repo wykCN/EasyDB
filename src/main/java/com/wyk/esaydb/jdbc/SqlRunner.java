@@ -43,12 +43,17 @@ public class SqlRunner<T extends IEntity> {
 		return rows > 0;
 	}
 	public boolean executeDelete(Connection conn,T obj,Map<String,Object> conditions) throws SQLException{
-		SqlHolder sqlHolder = SqlBuilder.buildUpdate(obj, conditions);
+		SqlHolder sqlHolder = SqlBuilder.buildDelete(obj, conditions);
 		int rows = runner.update(conn, sqlHolder.getSql(), sqlHolder.getParams());
 		return rows > 0;
 	}
 	public List<T> executeQuery(Connection conn,Class<T> clazz,Map<String,Object> conditions) throws SQLException {
 		SqlHolder sqlHolder = SqlBuilder.buildFind(clazz, conditions);
+		List<T> list = runner.query(conn, sqlHolder.getSql(), handler,sqlHolder.getParams());
+		return list;
+	}
+	public List<T> executeQueryLike(Connection conn,Class<T> clazz,Map<String,Object> conditions) throws SQLException {
+		SqlHolder sqlHolder = SqlBuilder.buildLikeFind(clazz, conditions);
 		List<T> list = runner.query(conn, sqlHolder.getSql(), handler,sqlHolder.getParams());
 		return list;
 	}

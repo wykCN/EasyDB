@@ -3,6 +3,7 @@ package com.wyk.esaydb.session;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,17 @@ public class SqlSession<T extends IEntity> {
 		}
 		return flag;
 	}
+	public boolean delete(T obj,String id){
+		boolean flag = false;
+		Map<String ,Object> conditions = new HashMap<String,Object>();
+		conditions.put("id", id);
+		try {
+			flag = sqlRunner.executeDelete(connection, obj, conditions);
+		} catch (SQLException e) {
+			throw new RuntimeException("删除实体失败",e);
+		}
+		return flag;
+	}
 	public boolean delete(T obj,Map<String,Object> conditions){
 		boolean flag = false;
 		try {
@@ -68,7 +80,17 @@ public class SqlSession<T extends IEntity> {
 		}
 		return list;
 	}
-	
+	public List<T> find(String id){
+		List<T> list = new ArrayList<T>();
+		Map<String ,Object> conditions = new HashMap<String,Object>();
+		conditions.put("id", id);
+		try {
+			list = sqlRunner.executeQuery(connection, clazz, conditions);
+		} catch (SQLException e) {
+			throw new RuntimeException("更新实体失败",e);
+		}
+		return list;
+	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List findByCustomSql(Class customType,String sql,Object[] params){
 		List list = new ArrayList();

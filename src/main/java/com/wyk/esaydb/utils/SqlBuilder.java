@@ -121,10 +121,10 @@ public class SqlBuilder {
 	 * @param conditions
 	 * @return
 	 */
-	public static SqlHolder buildLikeFind(IEntity entity,Map<String,Object> conditions){
+	public static SqlHolder buildLikeFind(Class<? extends IEntity> clazz,Map<String,Object> conditions){
 		SqlHolder holder = new SqlHolder();
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT * FROM ").append(getTableName(entity.getClass()));
+		sql.append("SELECT * FROM ").append(getTableName(clazz));
 		
 		holder.setSql(sql.toString());
 		
@@ -139,7 +139,7 @@ public class SqlBuilder {
 		sql.append(" WHERE ");
 		for(String column : conditions.keySet()){
 			Object obj = conditions.get(column);
-			sql.append(column+" = ? and ");
+			sql.append(column.toUpperCase()+" = ? and ");
 			holder.addParam(obj);
 		}
 		deleteLastAND(sql);
@@ -154,8 +154,8 @@ public class SqlBuilder {
 		sql.append(" WHERE ");
 		for(String column : conditions.keySet()){
 			Object obj = conditions.get(column);
-			sql.append(column+" LIKE ? and ");
-			holder.addParam(obj);
+			sql.append(column.toUpperCase()+" LIKE ? and ");
+			holder.addParam("%"+obj+"%");
 		}
 		deleteLastAND(sql);
 		holder.setSql(sql.toString());
@@ -189,7 +189,7 @@ public class SqlBuilder {
 		String entityName = tableEntity.getSimpleName();
 		Table table = tableEntity.getAnnotation(Table.class);
 		if (table != null && StringUtils.isNotEmpty(table.name())) {
-			return table.name();
+			return table.name().toUpperCase();
 		}
 		return entityName;
 	}
@@ -204,7 +204,7 @@ public class SqlBuilder {
 		String propertyName = f.getName();
 		Column column = f.getAnnotation(Column.class);
 		if (column != null && StringUtils.isNotEmpty(column.name())) {
-			return column.name();
+			return column.name().toUpperCase();
 		}
 		return propertyName;
 	}
