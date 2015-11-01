@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.commons.dbutils.QueryRunner;
 
+import com.wyk.esaydb.exception.UniqueNotFoundException;
 import com.wyk.esaydb.interfaces.IEntity;
 import com.wyk.esaydb.utils.SqlBuilder;
 import com.wyk.esaydb.utils.SqlHolder;
@@ -37,8 +38,18 @@ public class SqlRunner<T extends IEntity> {
 		int rows = runner.update(conn, sqlHolder.getSql(), sqlHolder.getParams());
 		return rows > 0;
 	}
+	public boolean executeUpdate(Connection conn,T obj) throws SQLException, UniqueNotFoundException {
+		SqlHolder sqlHolder = SqlBuilder.buildUpdate(obj);
+		int rows = runner.update(conn, sqlHolder.getSql(), sqlHolder.getParams());
+		return rows > 0;
+	}
 	public boolean executeUpdate(Connection conn,T obj,Map<String,Object> conditions) throws SQLException {
 		SqlHolder sqlHolder = SqlBuilder.buildUpdate(obj, conditions);
+		int rows = runner.update(conn, sqlHolder.getSql(), sqlHolder.getParams());
+		return rows > 0;
+	}
+	public boolean executeDelete(Connection conn,T obj) throws SQLException, UniqueNotFoundException{
+		SqlHolder sqlHolder = SqlBuilder.buildDelete(obj);
 		int rows = runner.update(conn, sqlHolder.getSql(), sqlHolder.getParams());
 		return rows > 0;
 	}
@@ -46,6 +57,11 @@ public class SqlRunner<T extends IEntity> {
 		SqlHolder sqlHolder = SqlBuilder.buildDelete(obj, conditions);
 		int rows = runner.update(conn, sqlHolder.getSql(), sqlHolder.getParams());
 		return rows > 0;
+	}
+	public List<T> executeQuery(Connection conn,T obj) throws SQLException, UniqueNotFoundException {
+		SqlHolder sqlHolder = SqlBuilder.buildFind(obj);
+		List<T> list = runner.query(conn, sqlHolder.getSql(), handler,sqlHolder.getParams());
+		return list;
 	}
 	public List<T> executeQuery(Connection conn,Class<T> clazz,Map<String,Object> conditions) throws SQLException {
 		SqlHolder sqlHolder = SqlBuilder.buildFind(clazz, conditions);

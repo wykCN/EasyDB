@@ -7,7 +7,7 @@ import com.wyk.esaydb.interfaces.IEntity;
 @Table(name="role")
 public class Role implements IEntity{
 
-	@Column(name="id")
+	@Column(name="id",unique=true)
 	private String id;
 	@Column(name="rolename")
 	private String rolename;
