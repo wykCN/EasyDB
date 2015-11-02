@@ -53,8 +53,8 @@ public class SqlBuilder {
 		
 		//builder sql
 		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO").append(getTableName(entity.getClass())).append("(");
-		sql.append(columns).append("");
+		sql.append("INSERT INTO ").append(getTableName(entity.getClass())).append("(");
+		sql.append(columns).append(")");
 		sql.append(" VALUES(").append(values).append(")");
 		holder.setSql(sql.toString());
 		return holder;

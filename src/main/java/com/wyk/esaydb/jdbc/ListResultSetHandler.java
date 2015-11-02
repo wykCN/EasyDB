@@ -58,7 +58,7 @@ public class ListResultSetHandler<T> extends AbstractListHandler<T> {
 		Field[] fields = clazz.getDeclaredFields();
 		for (Field field : fields) {
 			Column column = field.getAnnotation(Column.class);
-			if (column != null && StringUtils.equals(columnName, column.name())) {
+			if (column != null && StringUtils.equals(columnName.toUpperCase(), column.name().toUpperCase())) {
 				return field;
 			}
 		}

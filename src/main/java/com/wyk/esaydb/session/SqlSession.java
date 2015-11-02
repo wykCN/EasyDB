@@ -3,7 +3,6 @@ package com.wyk.esaydb.session;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -117,9 +116,8 @@ public class SqlSession<T extends IEntity> {
 		return list;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List findByCustomSql(Class customType,String sql,Object[] params){
-		List list = new ArrayList();
+	public List<T> findByCustomSql(Class<T> customType,String sql,Object[] params){
+		List<T> list = new ArrayList<T>();
 		try {
 			list = sqlRunner.executeCostomQuery(connection, customType, sql, params);
 		} catch (SQLException e) {
